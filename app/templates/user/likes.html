@@ -1,0 +1,86 @@
+{% extends "base.html" %} {% block title %}Понравившиеся — FilmSwipe{% endblock
+%} {% block content %}
+<div class="page">
+  <div class="page-header">
+    <h2>Понравившиеся фильмы</h2>
+    {% if movies %}
+    <a href="/export/pdf" class="btn btn-sm">Экспорт в PDF</a>
+    {% endif %}
+  </div>
+
+  {% if movies %}
+  <div class="likes-grid">
+    {% for movie in movies %}
+    <div class="like-card" onclick="openModal('modal-{{ movie.id }}')">
+      <div class="like-poster-wrap">
+        {% if movie.poster_path %}
+        <img src="{{ movie.poster_path }}" alt="{{ movie.title }}" />
+        {% else %}
+        <div class="like-poster-placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="like-info">
+        <div class="like-title">{{ movie.title }}</div>
+        <div class="like-meta">
+          {{ movie.genre }}&nbsp;·&nbsp;{{ movie.year or '' }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="modal-{{ movie.id }}"
+      onclick="closeModal(this)"
+    >
+      <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <span>{{ movie.title }}</span>
+          <button
+            class="modal-close"
+            onclick="closeModal(document.getElementById('modal-{{ movie.id }}'))"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          {% if movie.poster_path %}
+          <img src="{{ movie.poster_path }}" alt="{{ movie.title }}" />
+          {% endif %}
+          <div class="modal-meta">
+            {{ movie.genre }}{% if movie.year %} · {{ movie.year }}{% endif %}
+          </div>
+          {% if movie.description %}
+          <p>{{ movie.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <h3>Пока ничего нет</h3>
+    <p style="margin-top: 0.5rem">
+      Свайпайте фильмы вправо, чтобы добавить их сюда.
+    </p>
+    <a href="/" class="btn" style="margin-top: 1.2rem">Начать подбор</a>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function openModal(id) {
+    document.getElementById(id).classList.add("open");
+  }
+  function closeModal(el) {
+    el.classList.remove("open");
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape")
+      document
+        .querySelectorAll(".modal-overlay.open")
+        .forEach((m) => m.classList.remove("open"));
+  });
+</script>
+{% endblock %}

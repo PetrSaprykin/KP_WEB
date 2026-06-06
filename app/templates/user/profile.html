@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block title %}Профиль — FilmSwipe{% endblock %} {%
+block content %}
+<div class="page">
+  <div class="profile-layout">
+    <div class="profile-left">
+      <div class="profile-avatar">фото</div>
+      <div class="profile-username">{{ user.username }}</div>
+      <div class="profile-role-badge">
+        {% if user.role == 'admin' %}администратор{% else %}пользователь{% endif
+        %}
+      </div>
+    </div>
+
+    <div class="profile-right">
+      <table class="stats-table">
+        <tr>
+          <td>Просмотрено фильмов</td>
+          <td class="stat-val">{{ total }}</td>
+        </tr>
+        <tr>
+          <td>Понравилось</td>
+          <td class="stat-val">{{ liked }}</td>
+        </tr>
+        <tr>
+          <td>Пропущено</td>
+          <td class="stat-val">{{ disliked }}</td>
+        </tr>
+        <tr>
+          <td>Дата регистрации</td>
+          <td class="stat-val">{{ user.created_at.strftime('%d.%m.%Y') }}</td>
+        </tr>
+      </table>
+
+      <div class="profile-buttons">
+        <a href="/likes" class="btn">Мои лайки</a>
+        <a href="/auth/logout" class="btn btn-dark">Выйти из аккаунта</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

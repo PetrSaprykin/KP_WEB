@@ -1,0 +1,53 @@
+{% extends "base.html" %} {% block title %}FilmSwipe{% endblock %} {% block
+content %}
+<div class="swipe-outer">
+  {% if movie %}
+  <div class="movie-card" id="movie-card" data-movie-id="{{ movie.id }}">
+    <div class="swipe-hint like">ЛАЙК</div>
+    <div class="swipe-hint dislike">ПРОПУСК</div>
+
+    <div class="card-poster-wrap">
+      {% if movie.poster_path %}
+      <img src="{{ movie.poster_path }}" alt="{{ movie.title }}" />
+      {% else %}
+      <div class="card-poster-placeholder">
+        <span class="placeholder-label">постер фильма</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="card-body-text">
+      <div class="card-title">{{ movie.title }}</div>
+      <div class="card-meta">
+        {{ movie.genre }}&nbsp;&nbsp;·&nbsp;&nbsp;{{ movie.year or '' }}
+      </div>
+      {% if movie.description %}
+      <div class="card-desc">{{ movie.description }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="swipe-buttons">
+    <button class="btn-dislike" id="btn-dislike">× &nbsp;Не нравится</button>
+    <button class="btn-like" id="btn-like">♥ &nbsp;Нравится</button>
+  </div>
+
+  <div
+    style="margin-top: 1rem; font-size: 12px; color: #aaa; text-align: center"
+  >
+    Свайпайте или используйте кнопки &nbsp;·&nbsp; ← →
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <h3>Все фильмы просмотрены!</h3>
+    <p style="margin-top: 0.5rem">Вы оценили все доступные фильмы.</p>
+    <a href="/likes" class="btn" style="margin-top: 1.2rem"
+      >Посмотреть понравившиеся</a
+    >
+  </div>
+  {% endif %}
+</div>
+{% endblock %} {% block extra_js %}
+<script src="/static/js/swipe.js"></script>
+{% endblock %}

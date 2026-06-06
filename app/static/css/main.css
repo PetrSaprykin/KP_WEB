@@ -1,0 +1,637 @@
+/* ── Reset & Base ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #fff;
+  color: #111;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Navbar ───────────────────────────────────── */
+.navbar {
+  background: #f0f0f0;
+  border-bottom: 2px solid #111;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-brand {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #111;
+}
+
+.navbar-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── Buttons ──────────────────────────────────── */
+.btn {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  padding: 0.35rem 0.9rem;
+  border: 1.5px solid #111;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: #f0f0f0;
+}
+
+.btn-dark {
+  background: #111;
+  color: #fff;
+}
+.btn-dark:hover {
+  background: #333;
+}
+
+.btn-sm {
+  font-size: 13px;
+  padding: 0.2rem 0.6rem;
+}
+
+/* ── Page wrapper ─────────────────────────────── */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2rem;
+}
+
+/* ── Main / Swipe ─────────────────────────────── */
+.swipe-outer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.movie-card {
+  width: 480px;
+  border: 1.5px solid #888;
+  box-shadow: 4px 4px 0 #bbb;
+  background: #fff;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-y;
+  position: relative;
+}
+.movie-card:active {
+  cursor: grabbing;
+}
+.movie-card.dragging {
+  box-shadow: 6px 6px 0 #999;
+  transition: none;
+}
+.movie-card.swipe-left {
+  animation: flyLeft 0.35s ease forwards;
+}
+.movie-card.swipe-right {
+  animation: flyRight 0.35s ease forwards;
+}
+
+@keyframes flyLeft {
+  to {
+    transform: translateX(-130vw) rotate(-20deg);
+    opacity: 0;
+  }
+}
+@keyframes flyRight {
+  to {
+    transform: translateX(130vw) rotate(20deg);
+    opacity: 0;
+  }
+}
+
+/* Poster area */
+.card-poster-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #d8d8d8;
+  overflow: hidden;
+  border-bottom: 1.5px solid #888;
+}
+
+.card-poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* X placeholder */
+.card-poster-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-poster-placeholder::before,
+.card-poster-placeholder::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    #aaa calc(50% - 0.5px),
+    #aaa calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+.card-poster-placeholder::after {
+  background: linear-gradient(
+    to bottom left,
+    transparent calc(50% - 0.5px),
+    #aaa calc(50% - 0.5px),
+    #aaa calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+.placeholder-label {
+  position: relative;
+  z-index: 1;
+  border: 1px dashed #888;
+  padding: 0.2rem 0.7rem;
+  font-size: 13px;
+  color: #888;
+  background: rgba(216, 216, 216, 0.7);
+}
+
+/* Swipe hints */
+.swipe-hint {
+  position: absolute;
+  top: 1rem;
+  z-index: 10;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  border: 2.5px solid;
+  padding: 0.15rem 0.6rem;
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.swipe-hint.like {
+  right: 1rem;
+  color: #111;
+  border-color: #111;
+}
+.swipe-hint.dislike {
+  left: 1rem;
+  color: #555;
+  border-color: #555;
+}
+
+/* Card body */
+.card-body-text {
+  padding: 1rem 1.1rem;
+}
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.card-meta {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+.card-desc {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.55;
+}
+
+/* Swipe buttons */
+.swipe-buttons {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.btn-dislike {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  padding: 0.5rem 1.5rem;
+  border: 1.5px solid #bbb;
+  background: #fff;
+  color: #777;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.btn-dislike:hover {
+  background: #f5f5f5;
+}
+
+.btn-like {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  padding: 0.5rem 1.5rem;
+  border: 1.5px solid #111;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.btn-like:hover {
+  background: #333;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #777;
+}
+.empty-state h3 {
+  color: #111;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Likes Grid ───────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 2px solid #111;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+.page-header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.likes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .likes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .likes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.like-card {
+  border: 1.5px solid #bbb;
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+  background: #fff;
+  display: block;
+  color: inherit;
+}
+.like-card:hover {
+  box-shadow: 3px 3px 0 #bbb;
+}
+
+.like-poster-wrap {
+  width: 100%;
+  aspect-ratio: 2/3;
+  background: #d8d8d8;
+  position: relative;
+  overflow: hidden;
+}
+.like-poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.like-poster-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.like-poster-placeholder::before,
+.like-poster-placeholder::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    #aaa calc(50% - 0.5px),
+    #aaa calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+.like-poster-placeholder::after {
+  background: linear-gradient(
+    to bottom left,
+    transparent calc(50% - 0.5px),
+    #aaa calc(50% - 0.5px),
+    #aaa calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+
+.like-info {
+  padding: 0.6rem 0.7rem;
+  border-top: 1px solid #ddd;
+}
+.like-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+.like-meta {
+  font-size: 12px;
+  color: #777;
+}
+
+/* ── Profile ──────────────────────────────────── */
+.profile-layout {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+  padding: 2rem 0;
+}
+
+.profile-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 160px;
+}
+
+.profile-avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px solid #111;
+  background: #d8d8d8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #888;
+}
+
+.profile-username {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.profile-role-badge {
+  border: 1.5px solid #bbb;
+  padding: 0.15rem 0.6rem;
+  font-size: 13px;
+  color: #555;
+}
+
+.profile-right {
+  flex: 1;
+}
+
+.stats-table {
+  width: 100%;
+  border: 1.5px solid #bbb;
+  border-collapse: collapse;
+  margin-bottom: 1.2rem;
+}
+.stats-table td {
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+.stats-table tr:last-child td {
+  border-bottom: none;
+}
+.stats-table .stat-val {
+  text-align: right;
+  font-weight: 700;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* ── Admin ────────────────────────────────────── */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  font-size: 14px;
+}
+.admin-table th {
+  border: 1.5px solid #bbb;
+  padding: 0.5rem 0.75rem;
+  background: #f0f0f0;
+  font-weight: 700;
+  text-align: left;
+}
+.admin-table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+}
+.admin-table tr:hover td {
+  background: #fafafa;
+}
+
+.poster-filename {
+  color: #aaa;
+  font-size: 13px;
+}
+.td-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* Admin form */
+.admin-form-box {
+  border: 1.5px solid #bbb;
+  padding: 1.5rem;
+}
+.admin-form-box h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.5rem;
+}
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 0.35rem;
+}
+.form-group input,
+.form-group textarea {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  width: 100%;
+  border: 1.5px solid #bbb;
+  padding: 0.4rem 0.6rem;
+  background: #fff;
+  color: #111;
+  outline: none;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #111;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+/* ── Auth ─────────────────────────────────────── */
+.auth-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 2rem;
+}
+.auth-box {
+  width: 100%;
+  max-width: 400px;
+  border: 1.5px solid #bbb;
+  padding: 2rem;
+}
+.auth-box h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.auth-box .form-group {
+  margin-bottom: 1rem;
+}
+
+.auth-link {
+  font-size: 13px;
+  color: #777;
+  margin-top: 1rem;
+  text-align: center;
+}
+.auth-link a {
+  color: #111;
+  text-decoration: underline;
+}
+
+.alert-error {
+  border: 1.5px solid #bbb;
+  padding: 0.4rem 0.7rem;
+  font-size: 13px;
+  color: #c00;
+  margin-bottom: 1rem;
+  background: #fff5f5;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open {
+  display: flex;
+}
+.modal-box {
+  background: #fff;
+  border: 1.5px solid #111;
+  max-width: 480px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid #ddd;
+  font-weight: 700;
+}
+.modal-close {
+  cursor: pointer;
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  font-family: inherit;
+}
+.modal-body {
+  padding: 1rem 1.1rem;
+  font-size: 14px;
+  color: #333;
+}
+.modal-body img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  margin-bottom: 0.7rem;
+}
+.modal-meta {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 0.5rem;
+}
