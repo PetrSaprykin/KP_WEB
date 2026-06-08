@@ -16,7 +16,14 @@ from app.auth_utils import get_current_user
 
 router = APIRouter()
 
-FONT_NAME = "Helvetica"
+# Регистрируем шрифт сразу при импорте модуля
+_local = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")
+if os.path.exists(_local):
+    pdfmetrics.registerFont(TTFont("DejaVuSans", _local))
+    FONT_NAME = "DejaVuSans"
+else:
+    FONT_NAME = "Helvetica"
+    print("WARNING: DejaVuSans.ttf не найден, кириллица не будет отображаться")
 
 
 @router.get("/export/pdf")
@@ -36,7 +43,6 @@ async def export_likes_pdf(request: Request, db: Session = Depends(get_db)):
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=A4, leftMargin=2*cm, rightMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm)
 
-    styles = getSampleStyleSheet()
     title_style = ParagraphStyle("title", fontName=FONT_NAME, fontSize=18, spaceAfter=12, textColor=colors.HexColor("#1a1a2e"))
     subtitle_style = ParagraphStyle("subtitle", fontName=FONT_NAME, fontSize=11, textColor=colors.grey, spaceAfter=20)
     cell_style = ParagraphStyle("cell", fontName=FONT_NAME, fontSize=10)
@@ -83,5 +89,5 @@ async def export_likes_pdf(request: Request, db: Session = Depends(get_db)):
     return StreamingResponse(
         buffer,
         media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename=filmswipe_likes.pdf"},
+        headers={"Content-Disposition": "attachment; filename=filmswipe_likes.pdf"},
     )
