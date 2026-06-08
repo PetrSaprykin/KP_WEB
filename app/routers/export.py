@@ -16,7 +16,6 @@ from app.auth_utils import get_current_user
 
 router = APIRouter()
 
-# Регистрируем шрифт сразу при импорте модуля
 _local = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")
 if os.path.exists(_local):
     pdfmetrics.registerFont(TTFont("DejaVuSans", _local))
